@@ -20,6 +20,8 @@ services:
     depends_on:
       - db
       - broker
+      - gotenberg
+      - tika 
     ports:
       - "172.17.0.1:8000:8000"
     healthcheck:
@@ -39,3 +41,21 @@ services:
       - PAPERLESS_ADMIN_USER=${ADMIN_EMAIL}
       - PAPERLESS_ADMIN_PASSWORD=${ADMIN_PASSWORD}
       - PAPERLESS_URL=${PAPERLESS_URL}
+      - PAPERLESS_TIKA_ENABLED=1
+      - PAPERLESS_TIKA_GOTENBERG_ENDPOINT=http://gotenberg:3000
+      - PAPERLESS_TIKA_ENDPOINT=http://tika:9998
+  gotenberg:
+    image: elestio/gotenberg
+    restart: always
+    ports:
+      - 172.17.0.1:3000:3000
+  tika:
+    user: 0:0
+    stdin_open: true
+    tty: true
+    image: apache/tika
+    restart: always
+    ports:
+      - "172.17.0.1:9998:9998"
+    volumes:
+      - ./storage:/var
