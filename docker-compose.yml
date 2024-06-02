@@ -2,12 +2,12 @@ version: "3.4"
 services:
   broker:
     image: docker.io/library/redis:7
-    restart: unless-stopped
+    restart: always
     volumes:
       - ./redisdata:/data
   db:
     image: elestio/postgres:16
-    restart: unless-stopped
+    restart: always
     volumes:
       - ./postgres:/var/lib/postgresql/data
     environment:
@@ -16,7 +16,7 @@ services:
       - POSTGRES_PASSWORD=paperless
   webserver:
     image: ghcr.io/paperless-ngx/paperless-ngx:${SOFTWARE_VERSION_TAG}
-    restart: unless-stopped
+    restart: always
     depends_on:
       - db
       - broker
